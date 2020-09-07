@@ -10,15 +10,23 @@ using UnityEngine;
     /// </summary>
     public class Path : MonoBehaviour
     {
-
+        [SerializeField] private List<Waypoint> moveTo = new List<Waypoint>();
+        private int currentWayPoint = -1;
 
         /// <summary>
         /// Deze functie returned het volgende waypoint waar naartoe kan worden bewogen.
         /// </summary>
         public Waypoint GetNextWaypoint()
         {
-
+            currentWayPoint += 1;
+            if (currentWayPoint + 1 > moveTo.Count) return null;
             // dit is nu niet goed, zorg ervoor dat het goede waypoint wordt teruggegeven.
-            return null;
+            return moveTo[currentWayPoint];
+        }
+
+        public Waypoint getCurrentWaypoints()
+        {
+            if (currentWayPoint > moveTo.Count) return null;
+            return moveTo[currentWayPoint];
         }
     }

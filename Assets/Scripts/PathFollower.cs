@@ -11,24 +11,29 @@ using UnityEngine;
 /// </summary>
 public class PathFollower : MonoBehaviour
 {
-    [SerializeField] private List<Waypoint> moveTo = new List<Waypoint>();
-    private int currentTarget = 0;
+    [SerializeField] private Path _path;
     private Vector3 startPos;
+
+    private Waypoint _currentWaypoints;
+    
 
     void Start()
     {
-        if (moveTo.Count == 0)
-        {
-            this.enabled = false;
-            print("Er is geen route, Ik stop met!");
-        }
+        _currentWaypoints = _path.GetNextWaypoint();
         startPos = transform.position;
     }
 
  
     void Update()
     {
-        Vector3 targetPos = moveTo[currentTarget].Position;
+        if (_currentWaypoints == null)
+        {
+            print("Einde van het path bereikd");
+            this.enabled = false;
+            return;
+        }
+
+        Vector3 targetPos = _path.getCurrentWaypoints().Position;
 
         transform.position = Vector3.MoveTowards(transform.position, targetPos,
             5 * Time.deltaTime);
@@ -38,11 +43,9 @@ public class PathFollower : MonoBehaviour
             float dist = Vector3.Distance(startPos, transform.position);
             print("Ik ben er!, de afstand was: " + dist + " 5 meter");
 
-            currentTarget += 1;
-            if (currentTarget + 1 > moveTo.Count) currentTarget = 0;
-
-
             startPos = transform.position;
+
+            _currentWaypoints = _path.GetNextWaypoint();
         }
     }
 }
